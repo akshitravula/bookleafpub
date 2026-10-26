@@ -48,10 +48,14 @@ export const AdminAnalyticsBar: React.FC<Props> = ({ analytics, selectedCategory
       </div>
 
       {/* Category Pills Strip */}
-      <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs" data-tour="admin-filter-pills">
+      <div
+        className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1 text-xs select-none"
+        data-tour="admin-filter-pills"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         <button
           onClick={() => onSelectCategory("ALL")}
-          className={`px-2.5 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
+          className={`px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition cursor-pointer ${
             selectedCategory === "ALL"
               ? "bg-slate-900 text-white"
               : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
@@ -63,15 +67,15 @@ export const AdminAnalyticsBar: React.FC<Props> = ({ analytics, selectedCategory
           <button
             key={cat.category}
             onClick={() => onSelectCategory(cat.category)}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition flex items-center space-x-1.5 cursor-pointer ${
+            className={`px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition flex items-center space-x-1.5 cursor-pointer ${
               selectedCategory === cat.category
                 ? "bg-slate-900 text-white"
                 : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
             }`}
           >
-            <span>{cat.category}</span>
+            <span className="whitespace-nowrap">{cat.category}</span>
             <span
-              className={`text-[10px] px-1 py-0.2 rounded ${
+              className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
                 selectedCategory === cat.category ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-500"
               }`}
             >

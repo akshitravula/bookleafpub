@@ -451,7 +451,10 @@ export const AdminTicketDetail: React.FC<Props> = ({ ticketId, onBack }) => {
 
               {/* Quick Macro snippets */}
               {!isInternalNote && (
-                <div className="flex items-center space-x-1.5 overflow-x-auto text-[11px] text-slate-500 pb-0.5">
+                <div
+                  className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar text-[11px] text-slate-500 pb-0.5"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
                   <span className="shrink-0 text-slate-400">Quick macros:</span>
                   <button
                     type="button"
@@ -460,7 +463,7 @@ export const AdminTicketDetail: React.FC<Props> = ({ ticketId, onBack }) => {
                         `Dear ${ticket.author.name.split(" ")[0]},\n\nWe sincerely apologize for the print issue with your book. Under BookLeaf's quality guarantee, we arrange a 100% complimentary reprint for defective copies.\n\nCould you please reply with 2-3 clear photographs showing the defect (binding, page alignment, or ink)? Once verified by production, we will dispatch replacements within 5-7 business days.\n\nWarm regards,\nBookLeaf Operations Team`
                       )
                     }
-                    className="px-2 py-0.5 bg-white border border-slate-200 hover:bg-slate-50 rounded text-slate-700 shrink-0 transition cursor-pointer"
+                    className="px-2 py-0.5 bg-white border border-slate-200 hover:bg-slate-50 rounded text-slate-700 shrink-0 whitespace-nowrap transition cursor-pointer"
                   >
                     Defect Photos Request
                   </button>
@@ -547,19 +550,22 @@ export const AdminTicketDetail: React.FC<Props> = ({ ticketId, onBack }) => {
             </div>
 
             {/* Tone selector */}
-            <div className="flex items-center space-x-1 overflow-x-auto text-[11px]">
-              <span className="text-slate-400 text-[10px] pr-1">Tone:</span>
+            <div
+              className="flex items-center space-x-1 overflow-x-auto no-scrollbar text-[11px]"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              <span className="text-slate-400 text-[10px] pr-1 shrink-0">Tone:</span>
               <button
                 type="button"
                 onClick={() => handleCalibrateTone("empathetic")}
-                className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
+                className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 whitespace-nowrap shrink-0 transition cursor-pointer"
               >
                 Empathetic
               </button>
               <button
                 type="button"
                 onClick={() => handleCalibrateTone("concise")}
-                className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
+                className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 whitespace-nowrap shrink-0 transition cursor-pointer"
               >
                 Concise
               </button>
