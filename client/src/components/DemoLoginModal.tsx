@@ -59,7 +59,10 @@ export const DemoLoginModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
 
         {/* User list */}
-        <div className="overflow-y-auto p-6 space-y-2.5">
+        <div
+          className="overflow-y-auto no-scrollbar p-6 space-y-2.5"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {loading ? (
             <div className="py-12 text-center text-xs text-slate-400">Loading accounts...</div>
           ) : (

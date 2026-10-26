@@ -86,9 +86,9 @@ export const LoginView: React.FC<Props> = ({ onOpenKnowledgeBase }) => {
 
       {/* Main Card Container */}
       <div className="w-full max-w-sm sm:max-w-md mx-auto my-auto shrink-0">
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-sm p-4 sm:p-6">
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-sm p-3.5 sm:p-6">
           {/* Subtle switcher tabs */}
-          <div className="flex border-b border-slate-100 pb-2 mb-3.5 sm:mb-4">
+          <div className="flex border-b border-slate-100 pb-2 mb-3 sm:mb-4">
             <button
               type="button"
               onClick={() => setActiveTab("signin")}
@@ -170,16 +170,19 @@ export const LoginView: React.FC<Props> = ({ onOpenKnowledgeBase }) => {
             </form>
           ) : (
             <div className="space-y-1.5">
-              <p className="text-[10px] text-slate-500 mb-1.5">
+              <p className="text-[10px] text-slate-500 mb-1">
                 Click any persona to log in immediately:
               </p>
-              <div className="max-h-[220px] sm:max-h-[260px] overflow-y-auto space-y-1.5 pr-1">
+              <div
+                className="space-y-1.5 overflow-y-auto no-scrollbar"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
                 {demoAccounts.map((acc) => (
                   <button
                     key={acc.email}
                     type="button"
                     onClick={() => switchUser({ email: acc.email, role: acc.role })}
-                    className="w-full text-left p-2 sm:p-2.5 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition flex items-center justify-between group cursor-pointer"
+                    className="w-full text-left py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition flex items-center justify-between group cursor-pointer"
                   >
                     <div className="min-w-0 pr-2">
                       <div className="flex items-center space-x-1.5">
