@@ -240,21 +240,21 @@ export const GuidedTour: React.FC<Props> = ({ isOpen, onClose, onSwitchTab }) =>
       aria-label="Guided Product Tour"
       className="fixed z-50 transition-all duration-200 bottom-3 inset-x-3 sm:bottom-6 sm:right-6 sm:left-auto sm:w-[390px] max-w-full"
     >
-      <div className="bg-white rounded-lg shadow-2xl border border-slate-200 text-slate-900 p-4 sm:p-5 ring-1 ring-slate-900/5">
+      <div className="bg-white rounded-lg shadow-2xl border border-slate-200 text-slate-900 p-3.5 sm:p-5 ring-1 ring-slate-900/5">
         {/* Header */}
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-          <div className="flex items-center space-x-2">
-            <div className="p-1 rounded bg-slate-100 text-slate-700">
+          <div className="flex items-center space-x-2 min-w-0">
+            <div className="p-1 rounded bg-slate-100 text-slate-700 shrink-0">
               <Compass className="w-3.5 h-3.5" />
             </div>
             {currentStep.badge && (
-              <span className="text-[10px] font-mono uppercase tracking-wider font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-mono uppercase tracking-wider font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded truncate">
                 {currentStep.badge}
               </span>
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 shrink-0">
             <span className="text-[11px] font-mono text-slate-400">
               {currentStepIndex + 1} of {steps.length}
             </span>
@@ -276,9 +276,9 @@ export const GuidedTour: React.FC<Props> = ({ isOpen, onClose, onSwitchTab }) =>
         </div>
 
         {/* Footer Navigation Controls */}
-        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+        <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
           {/* Step dots */}
-          <div className="flex space-x-1">
+          <div className="flex space-x-1 shrink-0">
             {steps.map((_, idx) => (
               <button
                 key={idx}
@@ -295,11 +295,11 @@ export const GuidedTour: React.FC<Props> = ({ isOpen, onClose, onSwitchTab }) =>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center space-x-1.5">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
             {currentStepIndex > 0 && (
               <button
                 onClick={handlePrev}
-                className="px-2.5 py-1 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded transition cursor-pointer"
+                className="px-2 py-1 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded transition cursor-pointer"
               >
                 Back
               </button>
@@ -307,14 +307,14 @@ export const GuidedTour: React.FC<Props> = ({ isOpen, onClose, onSwitchTab }) =>
 
             <button
               onClick={handleComplete}
-              className="text-[11px] text-slate-400 hover:text-slate-600 px-2 py-1 transition cursor-pointer"
+              className="text-[11px] text-slate-400 hover:text-slate-600 px-1.5 py-1 transition cursor-pointer"
             >
               Skip
             </button>
 
             <button
               onClick={handleNext}
-              className="inline-flex items-center space-x-1 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded transition cursor-pointer shadow-xs"
+              className="inline-flex items-center space-x-1 px-2.5 sm:px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded transition cursor-pointer shadow-xs"
             >
               <span>{currentStepIndex === steps.length - 1 ? "Finish" : "Next"}</span>
               {currentStepIndex < steps.length - 1 ? (
