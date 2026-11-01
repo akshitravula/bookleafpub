@@ -33,6 +33,7 @@ COPY --from=builder /app/server/src/knowledge ./dist/knowledge
 
 # Copy built client frontend (served statically by Express)
 COPY --from=builder /app/client/dist /app/client/dist
+COPY --from=builder /app/client/dist /client/dist
 
 # Copy sample data for seed
 COPY bookleaf_sample_data.json /app/bookleaf_sample_data.json

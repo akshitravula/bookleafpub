@@ -61,8 +61,16 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Serve frontend if client/dist exists
-const clientDistPath = path.join(__dirname, "../../client/dist");
-if (fs.existsSync(clientDistPath)) {
+const possibleClientDistPaths = [
+  path.join(process.cwd(), "client/dist"),
+  path.join(__dirname, "../client/dist"),
+  path.join(__dirname, "../../client/dist"),
+  "/app/client/dist",
+  "/client/dist",
+];
+const clientDistPath = possibleClientDistPaths.find((p) => fs.existsSync(p));
+if (clientDistPath) {
+  console.log(`📦 Serving frontend SPA from: ${clientDistPath}`);
   // Static assets with aggressive caching
   app.use(
     express.static(clientDistPath, {
@@ -93,6 +101,8 @@ if (fs.existsSync(clientDistPath)) {
     res.setHeader("Expires", "0");
     res.sendFile(path.join(clientDistPath, "index.html"));
   });
+} else {
+  console.warn("⚠️ Warning: No client/dist directory found among candidates:", possibleClientDistPaths);
 }
 
 // Global Error Handler
