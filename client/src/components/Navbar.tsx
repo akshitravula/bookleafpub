@@ -20,6 +20,8 @@ export const Navbar: React.FC<Props> = ({
   if (!user) return null;
 
   const isAdmin = user.role === "ADMIN";
+  const rawApiUrl = (import.meta.env.VITE_API_URL as string | undefined) || "";
+  const apiDocsUrl = rawApiUrl ? `${rawApiUrl.replace(/\/api\/?$/, "")}/api/docs` : "/api/docs";
 
   return (
     <header className="bg-white border-b border-slate-200/80 sticky top-0 z-40">
@@ -79,7 +81,7 @@ export const Navbar: React.FC<Props> = ({
 
           {/* API Docs Button */}
           <a
-            href="http://localhost:5000/api/docs"
+            href={apiDocsUrl}
             target="_blank"
             rel="noreferrer"
             className="hidden md:flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md transition cursor-pointer"
