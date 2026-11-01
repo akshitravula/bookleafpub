@@ -22,7 +22,7 @@ RUN cd server && npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=5000
+ENV PORT=7860
 
 # Copy built server and dependencies
 COPY --from=builder /app/server/package*.json ./
@@ -37,7 +37,7 @@ COPY --from=builder /app/client/dist /app/client/dist
 # Copy sample data for seed
 COPY bookleaf_sample_data.json /app/bookleaf_sample_data.json
 
-EXPOSE 5000
+EXPOSE 7860
 
 # Push schema, seed DB if empty, and start
 CMD ["sh", "-c", "npx prisma db push && npx tsx prisma/seed.ts && node dist/index.js"]

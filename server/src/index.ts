@@ -5,7 +5,7 @@ dotenv.config();
 import { app } from "./app";
 import { socketService } from "./services/socket.service";
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7860;
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
 const server = http.createServer(app);
