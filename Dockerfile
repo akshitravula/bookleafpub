@@ -36,6 +36,7 @@ COPY --from=builder /app/client/dist /app/client/dist
 
 # Copy sample data for seed
 COPY bookleaf_sample_data.json /app/bookleaf_sample_data.json
+COPY bookleaf_sample_data.json /app/prisma/bookleaf_sample_data.json
 
 EXPOSE 7860
 

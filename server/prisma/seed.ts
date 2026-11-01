@@ -35,9 +35,16 @@ async function main() {
   console.log(`✅ Admin created: ${admin.email}`);
 
   // 2. Load Sample Data
-  const sampleDataPath = path.resolve(__dirname, "../../bookleaf_sample_data.json");
-  if (!fs.existsSync(sampleDataPath)) {
-    throw new Error(`Sample data file not found at: ${sampleDataPath}`);
+  const possiblePaths = [
+    path.resolve(process.cwd(), "bookleaf_sample_data.json"),
+    path.resolve(__dirname, "../bookleaf_sample_data.json"),
+    path.resolve(__dirname, "../../bookleaf_sample_data.json"),
+    path.resolve(__dirname, "bookleaf_sample_data.json"),
+    "/app/bookleaf_sample_data.json",
+  ];
+  const sampleDataPath = possiblePaths.find((p) => fs.existsSync(p));
+  if (!sampleDataPath) {
+    throw new Error(`Sample data file not found at any of: ${possiblePaths.join(", ")}`);
   }
 
   const rawData = fs.readFileSync(sampleDataPath, "utf-8");
