@@ -1,0 +1,12 @@
+email,name,author_id,role,phone,city,joined_date
+admin@bookleafpub.com,"Operations Admin",ADMIN001,Admin,"+91-99999-00000","Delhi",2021-01-01
+priya.sharma@email.com,"Priya Sharma",AUTH001,Author,"+91-98765-43210","Mumbai",2023-03-15
+rohit.kapoor@email.com,"Rohit Kapoor",AUTH002,Author,"+91-87654-32109","Delhi",2022-11-08
+ananya.reddy@email.com,"Ananya Reddy",AUTH003,Author,"+91-76543-21098","Hyderabad",2024-02-20
+vikram.joshi@email.com,"Vikram Joshi",AUTH004,Author,"+91-65432-10987","Pune",2023-07-12
+meera.nair@email.com,"Meera Nair",AUTH005,Author,"+91-54321-09876","Kochi",2023-01-05
+arjun.malhotra@email.com,"Arjun Malhotra",AUTH006,Author,"+91-43210-98765","Chandigarh",2024-06-01
+sneha.kulkarni@email.com,"Sneha Kulkarni",AUTH007,Author,"+91-32109-87654","Bangalore",2022-09-18
+farhan.sheikh@email.com,"Farhan Sheikh",AUTH008,Author,"+91-21098-76543","Lucknow",2023-10-01
+kavita.deshmukh@email.com,"Kavita Deshmukh",AUTH009,Author,"+91-10987-65432","Nagpur",2024-04-10
+diya.chatterjee@email.com,"Diya Chatterjee",AUTH010,Author,"+91-09876-54321","Kolkata",2023-05-22

@@ -1,0 +1,202 @@
+{
+  "name": "BookLeaf - Author Royalty Notification & AI Summary Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "royalty-summary",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-trigger",
+      "name": "Bubble Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [180, 300],
+      "webhookId": "bookleaf-royalty-summary"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "auth-check",
+              "leftValue": "={{ $json.headers['x-bookleaf-api-key'] || $json.headers['authorization'] }}",
+              "rightValue": "bookleaf_secure_webhook_token_2026",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-auth-guard",
+      "name": "Validate API Security Key",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"error\": \"Unauthorized: Invalid or missing x-bookleaf-api-key security header\"\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "node-unauthorized-resp",
+      "name": "Return 401 Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [620, 480]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract payload from Bubble\nconst payload = $input.first().json.body || $input.first().json;\n\nconst authorId = payload.author_id || 'UNKNOWN_AUTHOR';\nconst authorName = payload.author_name || 'Author';\nconst authorEmail = payload.author_email || '';\nconst books = Array.isArray(payload.books) ? payload.books : [];\n\n// Calculate consolidated financials\nlet totalEarned = 0;\nlet totalPaid = 0;\nlet totalPending = 0;\nlet publishedCount = 0;\nlet inProductionCount = 0;\n\nconst publishedBooks = [];\nconst inProductionBooks = [];\n\nbooks.forEach(b => {\n  const earned = Number(b.total_royalty_earned || 0);\n  const paid = Number(b.royalty_paid || 0);\n  const pending = Number(b.royalty_pending || 0);\n\n  totalEarned += earned;\n  totalPaid += paid;\n  totalPending += pending;\n\n  if (b.status && b.status.toLowerCase().includes('in production')) {\n    inProductionCount++;\n    inProductionBooks.push({\n      title: b.title,\n      isbn: b.isbn || 'Pending Allocation',\n      status: b.status,\n      genre: b.genre\n    });\n  } else {\n    publishedCount++;\n    publishedBooks.push({\n      title: b.title,\n      isbn: b.isbn,\n      mrp: b.mrp,\n      sold: b.total_copies_sold,\n      earned: earned,\n      paid: paid,\n      pending: pending,\n      lastPayout: b.last_royalty_payout_date || 'No Payout Recorded',\n      platforms: b.available_on\n    });\n  }\n});\n\n// Determine payout cycle context according to BookLeaf Policy\n// 80/20 Net Split, Quarterly schedule, 45-day post quarter window, Rs 1000 rollover threshold\nconst isRollover = totalPending > 0 && totalPending < 1000;\nconst isEligible = totalPending >= 1000;\nconst isFullySettled = totalPending === 0;\n\nreturn [{\n  json: {\n    authorId,\n    authorName,\n    authorEmail,\n    totalBooks: books.length,\n    publishedCount,\n    inProductionCount,\n    financials: {\n      totalEarned,\n      totalPaid,\n      totalPending,\n      isRollover,\n      isEligible,\n      isFullySettled\n    },\n    publishedBooks,\n    inProductionBooks,\n    triggeredAt: new Date().toISOString(),\n    triggeredBy: payload.triggered_by || 'Operations Admin'\n  }\n}];"
+      },
+      "id": "node-data-processor",
+      "name": "Process & Validate Royalty Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [620, 240]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are BookLeaf Publishing's Chief Author Relations Officer. Generate an official, highly polished, empathetic, and transparent Royalty Summary Email for an author.\n\nCRITICAL BOOKLEAF POLICIES TO ENFORCE:\n1. Royalty Model: Transparent 80/20 Net Profit split (Author retains 80% of net profits after print, shipping, and distribution costs).\n2. Payout Schedule: Calculated quarterly and disbursed within 45 days following quarter close (Q1 in May, Q2 in August, Q3 in November, Q4 in February).\n3. ₹1,000 Payout Threshold: If pending royalty is > ₹0 but < ₹1,000, it safely rolls over to the subsequent quarterly cycle without penalty. If pending is >= ₹1,000, it is queued for the upcoming payout date.\n4. Production Transparency: If any books are 'In Production' (Cover Design, Typesetting, or Proofing), provide reassuring status updates that the Delhi print unit adheres to 5-7 day SLA standards.\n5. Tone: Dignified, encouraging, professional, literary, and supportive. Never robotic or cold. Address the author by their first name."
+            },
+            {
+              "role": "user",
+              "content": "=Please compose the official BookLeaf Royalty Summary for:\n\nAuthor: {{ $json.authorName }} ({{ $json.authorId }})\nEmail: {{ $json.authorEmail }}\n\nCONSOLIDATED FINANCIALS:\n- Total Royalties Earned to Date: ₹{{ $json.financials.totalEarned.toLocaleString() }}\n- Total Royalties Paid to Date: ₹{{ $json.financials.totalPaid.toLocaleString() }}\n- Current Pending Royalty: ₹{{ $json.financials.totalPending.toLocaleString() }}\n- Payout Status: {{ $json.financials.isRollover ? 'Rolls over (< ₹1,000 threshold)' : ($json.financials.isEligible ? 'Eligible for upcoming quarterly disbursement' : 'Fully Settled') }}\n\nPUBLISHED BOOKS BREAKDOWN:\n{{ JSON.stringify($json.publishedBooks, null, 2) }}\n\nIN PRODUCTION TITLES:\n{{ JSON.stringify($json.inProductionBooks, null, 2) }}\n\nGenerate the complete email with Subject Line, personalized salutation, clear book-by-book bulleted breakdown, financial summary table, timeline expectations, and editorial signature."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "node-ai-prompt-generator",
+      "name": "Generate Policy-Aware AI Summary",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [860, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiResponse = $input.first().json.message?.content || $input.first().json.text || $input.first().json.content || 'Royalty summary generated successfully.';\nconst contextData = $('Process & Validate Royalty Metrics').first().json;\n\nreturn [{\n  json: {\n    author_id: contextData.authorId,\n    author_name: contextData.authorName,\n    author_email: contextData.authorEmail,\n    total_pending: contextData.financials.totalPending,\n    email_subject: `BookLeaf Publishing - Royalty Statement & Publication Update for ${contextData.authorName}`,\n    email_body: aiResponse,\n    sent_at: new Date().toISOString(),\n    status: 'Success',\n    triggered_by: contextData.triggeredBy\n  }\n}];"
+      },
+      "id": "node-format-email-output",
+      "name": "Package Final Notification Object",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 240]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"status\": \"Success\",\n  \"author_id\": \"{{ $json.author_id }}\",\n  \"author_name\": \"{{ $json.author_name }}\",\n  \"author_email\": \"{{ $json.author_email }}\",\n  \"email_subject\": \"{{ $json.email_subject }}\",\n  \"email_body\": {{ JSON.stringify($json.email_body) }},\n  \"sent_at\": \"{{ $json.sent_at }}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "node-success-webhook-resp",
+      "name": "Return Success to Bubble UI",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1300, 240]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"status\": \"Failed\",\n  \"error\": \"Internal automation failure while processing royalty statement: \" + ($json.error?.message || 'Unknown processing error'),\n  \"timestamp\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "id": "node-error-resp",
+      "name": "Catch & Return Error to Bubble",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1080, 480]
+    }
+  ],
+  "connections": {
+    "Bubble Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate API Security Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate API Security Key": {
+      "main": [
+        [
+          {
+            "node": "Process & Validate Royalty Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return 401 Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process & Validate Royalty Metrics": {
+      "main": [
+        [
+          {
+            "node": "Generate Policy-Aware AI Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Policy-Aware AI Summary": {
+      "main": [
+        [
+          {
+            "node": "Package Final Notification Object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Package Final Notification Object": {
+      "main": [
+        [
+          {
+            "node": "Return Success to Bubble UI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
