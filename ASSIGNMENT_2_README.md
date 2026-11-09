@@ -15,12 +15,15 @@ This project builds an automated, role-isolated operations platform for BookLeaf
 - **n8n Automation Engine**: Listens to secure webhooks from Bubble, enforces token-based security, aggregates catalog figures according to BookLeaf operating policies (80/20 split, 45-day post-quarter window, ₹1,000 rollover rule), synthesizes personalized emails via LLM, and sends real-time status callbacks to Bubble's notification log.
 
 ### Deliverables Checklist:
-1. **Live Bubble Application**: `https://bookleaf-royalty-portal.bubbleapps.io/version-test/admin_dashboard`
+1. **Live Bubble Application**: `https://akshitravulawork.bubbleapps.io/version-test/login`
+   - **Admin Desk**: `https://akshitravulawork.bubbleapps.io/version-test/admin`
+   - **Author Portal**: `https://akshitravulawork.bubbleapps.io/version-test/`
    - **Admin Account**: `admin@bookleafpub.com` / `admin123`
    - **Author Account**: `priya.sharma@email.com` / `author123`
-2. **n8n Workflow Export**: [`n8n_royalty_notification_workflow.json`](./n8n_royalty_notification_workflow.json)
-3. **Video Walkthrough (3-5 mins Loom)**: [Included in Submission]
-4. **Documentation**: Full schema, integration security, prompt design, and learning reflection detailed below.
+2. **n8n Workflow Export (GitHub)**: [`n8n_royalty_notification_workflow.json`](https://github.com/akshitravula/bookleafpub/blob/main/n8n_royalty_notification_workflow.json)
+3. **Video Walkthrough (MP4 / Loom)**: [`walkthrough.mp4`](https://github.com/akshitravula/bookleafpub/blob/main/walkthrough.mp4)
+4. **Complete Documentation**: [`ASSIGNMENT_2_README.md`](https://github.com/akshitravula/bookleafpub/blob/main/ASSIGNMENT_2_README.md)
+5. **Architectural Specification**: [`BUBBLE_N8N_END_TO_END_SPECIFICATION.md`](https://github.com/akshitravula/bookleafpub/blob/main/BUBBLE_N8N_END_TO_END_SPECIFICATION.md)
 
 ---
 

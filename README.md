@@ -6,6 +6,17 @@ Powered by a **Knowledge-Grounded AI Engine**, real-time **WebSockets**, and an 
 
 ---
 
+## 📌 Technical Round Navigation
+
+This repository contains the complete deliverables for **both rounds** of the BookLeaf Publishing Technical Assessment:
+
+| Round | Project Scope | Technologies | Documentation & Artifacts |
+| :--- | :--- | :--- | :--- |
+| **Round 1** | Author Support & Operations Communication Desk | React, Node.js, Express, TypeScript, Prisma, WebSockets | Documented below in this README |
+| **Round 2** | Author Royalty Dashboard & Automated Notification System | Bubble.io, n8n Cloud, OpenAI LLM API | **[View Assignment 2 README](./ASSIGNMENT_2_README.md)** \| **[n8n Workflow JSON](./n8n_royalty_notification_workflow.json)** |
+
+---
+
 ## 🌐 Live Demo & Evaluation Links
 
 - **Live Application URL**: **[https://relocation-lately-scratch-sentence.trycloudflare.com](https://relocation-lately-scratch-sentence.trycloudflare.com)**
